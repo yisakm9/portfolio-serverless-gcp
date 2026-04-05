@@ -1,11 +1,8 @@
 name: Deploy Frontend (React)
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'frontend/**'
+  # Manual trigger only — the Production Pipeline handles push-triggered deploys
+  # This prevents state lock conflicts between parallel workflows
   workflow_dispatch:
 
 env:

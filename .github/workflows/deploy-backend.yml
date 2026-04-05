@@ -1,11 +1,7 @@
 name: Deploy Backend (Cloud Functions)
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'backend/**'
+  # Manual trigger only — the Production Pipeline handles push-triggered deploys
   workflow_dispatch:
 
 env:
