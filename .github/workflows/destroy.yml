@@ -1,0 +1,57 @@
+name: Destroy Infrastructure
+
+on:
+  # Manual Trigger Only - Safety First!
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: 'Type "DESTROY" to confirm deletion of all resources'
+        required: true
+        default: ''
+
+env:
+  GCP_REGION: us-central1
+  TF_VERSION: 1.5.7
+  WORKING_DIR: ./terraform/environments/dev
+  PROJECT_ID: project-6cdce5b2-1881-424f-a94
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform-destroy:
+    name: Destroy Infrastructure
+    # Safety Check: Job only runs if user typed "DESTROY"
+    if: ${{ github.event.inputs.confirmation == 'DESTROY' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      # GCP Authentication via Workload Identity Federation
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve

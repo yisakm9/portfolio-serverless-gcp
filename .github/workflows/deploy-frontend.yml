@@ -1,0 +1,108 @@
+name: Deploy Frontend (React)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+  workflow_dispatch:
+
+env:
+  GCP_REGION: us-central1
+  TF_VERSION: 1.5.7
+  WORKING_DIR: ./terraform/environments/dev
+  PROJECT_ID: project-6cdce5b2-1881-424f-a94
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      # GCP Authentication via Workload Identity Federation
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      # Fetch dynamic config from Terraform outputs
+      - name: Fetch Configuration from Terraform
+        id: get-params
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          echo "Fetching infrastructure details from Terraform outputs..."
+          terraform init -backend=true
+          
+          # Cloud Function URLs (replaces SSM API URL)
+          CONTACT_URL=$(terraform output -raw contact_function_url)
+          echo "VITE_API_CONTACT_URL=$CONTACT_URL" >> $GITHUB_ENV
+          
+          PROJECTS_URL=$(terraform output -raw projects_function_url)
+          echo "VITE_API_PROJECTS_URL=$PROJECTS_URL" >> $GITHUB_ENV
+          
+          # GCS Bucket Name (replaces SSM bucket name)
+          BUCKET_NAME=$(terraform output -raw frontend_bucket_name)
+          echo "GCS_BUCKET_NAME=$BUCKET_NAME" >> $GITHUB_ENV
+          
+          # URL Map Name (replaces CloudFront Distribution ID)
+          URL_MAP=$(terraform output -raw url_map_name)
+          echo "URL_MAP_NAME=$URL_MAP" >> $GITHUB_ENV
+
+          echo "::notice::Config Loaded: Bucket=$BUCKET_NAME, URLMap=$URL_MAP"
+
+      - name: Debug Values
+        run: |
+          echo "Contact URL is: ${{ env.VITE_API_CONTACT_URL }}"
+          echo "Projects URL is: ${{ env.VITE_API_PROJECTS_URL }}"
+          echo "Bucket is: ${{ env.GCS_BUCKET_NAME }}"
+
+      - name: Build Production Bundle
+        run: npm run build
+        env:
+          VITE_API_CONTACT_URL: ${{ env.VITE_API_CONTACT_URL }}
+          VITE_API_PROJECTS_URL: ${{ env.VITE_API_PROJECTS_URL }}
+
+      # Upload to GCS (replaces aws s3 sync)
+      - name: Sync to GCS
+        run: |
+          gsutil -m rsync -r -d ./dist gs://${{ env.GCS_BUCKET_NAME }}
+
+      # Invalidate CDN cache (replaces CloudFront invalidation)
+      - name: Invalidate Cloud CDN Cache
+        run: |
+          gcloud compute url-maps invalidate-cdn-cache ${{ env.URL_MAP_NAME }} \
+            --path="/*" \
+            --project=${{ env.PROJECT_ID }} \
+            --async
