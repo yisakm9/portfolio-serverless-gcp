@@ -87,7 +87,7 @@ module "cloud_function_contact" {
     function    = "contact-form"
   }
 
-  depends_on = [module.firestore]
+  depends_on = [module.firestore, module.iam]
 }
 
 # =============================================================================
@@ -114,6 +114,8 @@ module "cloud_function_projects" {
     environment = var.environment
     function    = "get-projects"
   }
+
+  depends_on = [module.iam]
 }
 
 # =============================================================================
