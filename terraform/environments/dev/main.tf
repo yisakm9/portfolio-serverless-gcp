@@ -41,7 +41,15 @@ module "cloud_cdn" {
 
 # =============================================================================
 # 3. DATABASE — Firestore (replaces DynamoDB)
+# The import block handles the case where the (default) database already exists
+# in GCP (it can't be truly deleted). On fresh deploys, Terraform imports it
+# instead of failing with a 409 error.
 # =============================================================================
+import {
+  to = module.firestore.google_firestore_database.default
+  id = "projects/${var.project_id}/databases/(default)"
+}
+
 module "firestore" {
   source = "../../modules/firestore"
 
