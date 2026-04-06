@@ -40,6 +40,10 @@ resource "google_cloudfunctions2_function" "this" {
     runtime     = "python312"
     entry_point = var.entry_point
 
+    # Explicitly set build service account to avoid default SA permission issues
+    # This is the key fix for "missing permission on the build service account" error
+    service_account = "projects/${var.project_id}/serviceAccounts/${var.service_account_email}"
+
     source {
       storage_source {
         bucket = google_storage_bucket.function_source.name
