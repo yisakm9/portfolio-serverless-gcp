@@ -1,5 +1,17 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import axios from 'axios';
+
+const languageColors = {
+  Python: 'bg-yellow-400',
+  JavaScript: 'bg-yellow-300',
+  TypeScript: 'bg-blue-400',
+  HCL: 'bg-violet-400',
+  Terraform: 'bg-violet-400',
+  Go: 'bg-cyan-400',
+  Shell: 'bg-emerald-400',
+  Dockerfile: 'bg-blue-500',
+};
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -9,74 +21,135 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        // GCP: Each Cloud Function has its own URL
         const projectsUrl = import.meta.env.VITE_API_PROJECTS_URL;
-        
-        // Safety Check: If URL is missing, stop early
-        if (!projectsUrl) {
-          throw new Error("Projects API URL is not defined");
-        }
+        if (!projectsUrl) throw new Error('Projects API URL is not defined');
 
         const response = await axios.get(projectsUrl);
-        
-        // Safety Check: Ensure we actually got a list (Array)
         if (Array.isArray(response.data)) {
           setProjects(response.data);
         } else {
-          console.error("API returned unexpected data format:", response.data);
-          setProjects([]); 
+          setProjects([]);
         }
-
       } catch (err) {
-        console.error("Error fetching projects:", err);
-        setError("Could not load projects at this time.");
+        console.error('Error fetching projects:', err);
+        setError('Could not load projects at this time.');
       } finally {
         setLoading(false);
       }
     };
-
     fetchProjects();
   }, []);
 
-  if (loading) return <div className="text-center p-10">Loading Cloud Projects...</div>;
-  
-  if (error) return <div className="text-center p-10 text-red-500">{error}</div>;
-
   return (
-    <section className="py-12 bg-white" id="projects">
-      <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Featured Cloud Projects</h2>
-        
-        {projects.length === 0 && (
-           <p className="text-center text-gray-500">No projects found (or connecting to GitHub...)</p>
+    <section id="projects" className="relative dot-pattern">
+      <div className="section-container">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
+          <h2 className="section-title">
+            Featured <span className="gradient-text">Projects</span>
+          </h2>
+          <p className="section-subtitle">
+            Production-grade cloud infrastructure projects — fetched live from GitHub
+          </p>
+        </motion.div>
+
+        {/* Loading skeleton */}
+        {loading && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="glass p-6 animate-pulse">
+                <div className="h-6 bg-dark-500 rounded w-3/4 mb-4" />
+                <div className="h-4 bg-dark-500 rounded w-full mb-2" />
+                <div className="h-4 bg-dark-500 rounded w-5/6 mb-6" />
+                <div className="h-8 bg-dark-500 rounded w-1/3" />
+              </div>
+            ))}
+          </div>
         )}
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.isArray(projects) && projects.map((project) => (
-            <div key={project.id} className="border rounded-lg p-6 shadow hover:shadow-lg transition">
-              <h3 className="text-xl font-semibold text-blue-600 mb-2">{project.name}</h3>
-              <p className="text-gray-600 mb-4 h-20 overflow-hidden">{project.description}</p>
-              
-              <div className="flex justify-between items-center mt-4">
-                <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">
-                  {project.language || "Terraform"}
-                </span>
-                <div className="flex items-center text-yellow-500 font-bold text-sm">
-                  ★ {project.stars}
-                </div>
-              </div>
-              
-              <a 
-                href={project.html_url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="block mt-4 text-center bg-gray-900 text-white py-2 rounded hover:bg-gray-700"
+        {/* Error */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="glass p-8 text-center"
+          >
+            <p className="text-red-400">{error}</p>
+          </motion.div>
+        )}
+
+        {/* No projects */}
+        {!loading && !error && projects.length === 0 && (
+          <div className="glass p-8 text-center">
+            <p className="text-gray-400">No projects found. Connecting to GitHub...</p>
+          </div>
+        )}
+
+        {/* Project cards */}
+        {!loading && !error && projects.length > 0 && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((project, i) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="glass-hover p-6 flex flex-col group"
               >
-                View on GitHub
-              </a>
-            </div>
-          ))}
-        </div>
+                {/* Header */}
+                <div className="flex items-start justify-between mb-3">
+                  <div className="text-accent-cyan">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
+                  </div>
+                  <div className="flex items-center gap-1 text-yellow-400 text-sm">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    {project.stars}
+                  </div>
+                </div>
+
+                {/* Title */}
+                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-accent-cyan transition-colors duration-300">
+                  {project.name}
+                </h3>
+
+                {/* Description */}
+                <p className="text-gray-400 text-sm leading-relaxed mb-4 flex-grow line-clamp-3">
+                  {project.description || 'No description provided.'}
+                </p>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
+                  <div className="flex items-center gap-2">
+                    <span className={`w-3 h-3 rounded-full ${languageColors[project.language] || 'bg-gray-400'}`} />
+                    <span className="text-xs text-gray-400">{project.language || 'Terraform'}</span>
+                  </div>
+                  <a
+                    href={project.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-gray-400 hover:text-accent-cyan transition-colors duration-300 flex items-center gap-1"
+                  >
+                    View Code
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

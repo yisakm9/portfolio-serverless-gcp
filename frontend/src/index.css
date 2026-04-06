@@ -2,7 +2,146 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: #f3f4f6;
-  color: #1f2937;
+/* ============================================================
+   DESIGN SYSTEM — Dark Premium Portfolio
+   ============================================================ */
+
+/* --- Base Styles --- */
+@layer base {
+  * {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-dark-900 text-gray-100 antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-900;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-dark-500 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent-cyan;
+  }
+
+  /* Selection color */
+  ::selection {
+    @apply bg-accent-violet/30 text-white;
+  }
+}
+
+/* --- Glassmorphism Components --- */
+@layer components {
+  .glass {
+    @apply bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-2xl;
+  }
+
+  .glass-hover {
+    @apply glass transition-all duration-500;
+  }
+  .glass-hover:hover {
+    @apply bg-white/[0.08] border-white/[0.15] shadow-lg shadow-accent-cyan/5;
+    transform: translateY(-4px);
+  }
+
+  .glass-nav {
+    @apply bg-dark-900/70 backdrop-blur-xl border-b border-white/[0.06];
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan via-accent-blue to-accent-violet;
+  }
+
+  /* Glowing button */
+  .btn-glow {
+    @apply relative px-8 py-3 rounded-full font-semibold text-white overflow-hidden transition-all duration-300;
+    background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+  }
+  .btn-glow::before {
+    content: '';
+    @apply absolute inset-0 rounded-full opacity-0 transition-opacity duration-300;
+    background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+    filter: blur(20px);
+  }
+  .btn-glow:hover::before {
+    @apply opacity-60;
+  }
+  .btn-glow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(6, 182, 212, 0.3);
+  }
+
+  /* Outline button */
+  .btn-outline {
+    @apply px-8 py-3 rounded-full font-semibold border border-white/20 text-white
+           hover:border-accent-cyan/50 hover:text-accent-cyan hover:bg-accent-cyan/5
+           transition-all duration-300;
+  }
+  .btn-outline:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(6, 182, 212, 0.1);
+  }
+
+  /* Section wrapper */
+  .section-container {
+    @apply max-w-6xl mx-auto px-6 py-24;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold mb-4;
+  }
+
+  .section-subtitle {
+    @apply text-gray-400 text-lg mb-12 max-w-2xl mx-auto;
+  }
+}
+
+/* --- Animated Mesh Background --- */
+@layer utilities {
+  .mesh-gradient {
+    position: relative;
+    overflow: hidden;
+  }
+  .mesh-gradient::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(6, 182, 212, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.10) 0%, transparent 50%),
+      radial-gradient(ellipse at 40% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+    animation: mesh-move 20s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes mesh-move {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(2%, -3%) rotate(1deg); }
+    50% { transform: translate(-1%, 2%) rotate(-0.5deg); }
+    75% { transform: translate(3%, 1%) rotate(0.5deg); }
+  }
+
+  /* Dot grid pattern */
+  .dot-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Gradient line separator */
+  .gradient-line {
+    @apply h-px w-full;
+    background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.3), rgba(139, 92, 246, 0.3), transparent);
+  }
 }
