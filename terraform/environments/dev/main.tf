@@ -147,3 +147,14 @@ resource "google_secret_manager_secret" "sendgrid_api_key" {
     purpose     = "email"
   }
 }
+
+# =============================================================================
+# 9. CLOUDFLARE DNS — Automated Domain Management (replaces manual curl/UI)
+# Creates/destroys DNS records alongside infrastructure
+# =============================================================================
+module "cloudflare_dns" {
+  source = "../../modules/cloudflare"
+
+  domain_name      = var.domain_name
+  load_balancer_ip = module.cloud_cdn.load_balancer_ip
+}

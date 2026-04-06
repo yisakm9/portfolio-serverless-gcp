@@ -7,6 +7,10 @@ terraform {
       source  = "hashicorp/google"
       version = "~> 6.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 4.0"
+    }
     archive = {
       source  = "hashicorp/archive"
       version = "~> 2.0"
@@ -33,4 +37,10 @@ provider "google" {
     managed_by  = "terraform"
     owner       = "yisak-mesifin"
   }
+}
+
+# Cloudflare provider — authenticates via CLOUDFLARE_API_TOKEN env var
+# Set by: bootstrap.sh (locally) or GitHub Actions secret (CI/CD)
+provider "cloudflare" {
+  # Token is read from CLOUDFLARE_API_TOKEN environment variable automatically
 }
