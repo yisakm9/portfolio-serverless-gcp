@@ -80,7 +80,7 @@ const Hero = () => {
             <span className="text-white font-medium">scalable</span> infrastructure on{' '}
             <span className="text-accent-cyan">GCP</span> &{' '}
             <span className="text-accent-violet">AWS</span> with{' '}
-            Terraform, Kubernetes, and CI/CD pipelines.
+            Terraform, Docker, and CI/CD pipelines.
           </p>
 
           {/* CTAs */}

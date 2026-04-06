@@ -56,7 +56,7 @@ function App() {
                 </svg>
               </a>
               <a
-                href="https://linkedin.com/in/yisakmesifin"
+                href="https://linkedin.com/in/yisak-mesifin-815946354"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-white transition-colors duration-300"

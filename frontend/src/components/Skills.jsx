@@ -15,8 +15,8 @@ const skillCategories = [
     color: 'from-violet-400 to-purple-500',
     skills: [
       { name: 'Terraform', level: 92 },
-      { name: 'CloudFormation', level: 70 },
-      { name: 'Ansible', level: 65 },
+      { name: 'Cloud Build', level: 78 },
+      { name: 'Cloud CDN', level: 75 },
     ],
   },
   {
@@ -25,7 +25,7 @@ const skillCategories = [
     skills: [
       { name: 'GitHub Actions', level: 88 },
       { name: 'Docker', level: 82 },
-      { name: 'Kubernetes', level: 75 },
+      { name: 'Linux', level: 80 },
     ],
   },
   {

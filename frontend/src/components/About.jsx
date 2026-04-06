@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 
 const stats = [
   { value: '5+', label: 'Cloud Projects', icon: '☁️' },
-  { value: '3+', label: 'Certifications', icon: '🏅' },
-  { value: '10+', label: 'Technologies', icon: '⚙️' },
+  { value: '2+', label: 'Years Learning', icon: '📚' },
+  { value: '5+', label: 'Technologies', icon: '⚙️' },
   { value: '100%', label: 'IaC Coverage', icon: '🔧' },
 ];
 
@@ -49,7 +49,7 @@ const About = () => {
                 Currently building production-grade serverless systems with{' '}
                 <span className="text-accent-cyan">Terraform</span>,{' '}
                 <span className="text-accent-violet">Cloud Functions</span>,{' '}
-                <span className="text-accent-blue">Kubernetes</span>, and{' '}
+                <span className="text-accent-blue">Docker</span>, and{' '}
                 <span className="text-emerald-400">GitHub Actions</span>.
               </p>
             </div>
