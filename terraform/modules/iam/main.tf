@@ -80,40 +80,29 @@ locals {
   compute_sa     = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
 }
 
-# Ensure the Cloud Build service identity exists
-resource "google_project_service_identity" "cloudbuild" {
-  provider = google
-  project  = var.project_id
-  service  = "cloudbuild.googleapis.com"
-}
-
 # Grant Cloud Build SA all required roles
 resource "google_project_iam_member" "cloudbuild_builder" {
   project = var.project_id
   role    = "roles/cloudbuild.builds.builder"
   member  = "serviceAccount:${local.cloud_build_sa}"
-  depends_on = [google_project_service_identity.cloudbuild]
 }
 
 resource "google_project_iam_member" "cloudbuild_ar_writer" {
   project = var.project_id
   role    = "roles/artifactregistry.writer"
   member  = "serviceAccount:${local.cloud_build_sa}"
-  depends_on = [google_project_service_identity.cloudbuild]
 }
 
 resource "google_project_iam_member" "cloudbuild_storage" {
   project = var.project_id
   role    = "roles/storage.objectAdmin"
   member  = "serviceAccount:${local.cloud_build_sa}"
-  depends_on = [google_project_service_identity.cloudbuild]
 }
 
 resource "google_project_iam_member" "cloudbuild_logs" {
   project = var.project_id
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${local.cloud_build_sa}"
-  depends_on = [google_project_service_identity.cloudbuild]
 }
 
 # Grant Default Compute SA (sometimes used as the build SA in newer projects)
