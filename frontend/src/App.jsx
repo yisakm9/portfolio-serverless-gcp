@@ -4,6 +4,7 @@ import About from './components/About';
 import Skills from './components/Skills';
 import Testimonials from './components/Testimonials';
 import Projects from './components/Projects';
+import Blog from './components/Blog';
 import ContactForm from './components/ContactForm';
 
 function App() {
@@ -29,6 +30,10 @@ function App() {
       <div className="gradient-line" />
 
       <Projects />
+
+      <div className="gradient-line" />
+
+      <Blog />
 
       <div className="gradient-line" />
 

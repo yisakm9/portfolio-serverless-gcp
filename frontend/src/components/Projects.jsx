@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import ProjectModal from './ProjectModal';
 
 const languageColors = {
   Python: 'bg-yellow-400',
@@ -17,6 +18,7 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -74,11 +76,7 @@ const Projects = () => {
 
         {/* Error */}
         {error && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="glass p-8 text-center"
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass p-8 text-center">
             <p className="text-red-400">{error}</p>
           </motion.div>
         )}
@@ -100,7 +98,8 @@ const Projects = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="glass-hover p-6 flex flex-col group"
+                className="glass-hover p-6 flex flex-col group cursor-pointer"
+                onClick={() => setSelectedProject(project)}
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-3">
@@ -134,23 +133,23 @@ const Projects = () => {
                     <span className={`w-3 h-3 rounded-full ${languageColors[project.language] || 'bg-gray-400'}`} />
                     <span className="text-xs text-gray-400">{project.language || 'Terraform'}</span>
                   </div>
-                  <a
-                    href={project.html_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-gray-400 hover:text-accent-cyan transition-colors duration-300 flex items-center gap-1"
-                  >
-                    View Code
+                  <span className="text-xs text-gray-500 group-hover:text-accent-cyan transition-colors duration-300 flex items-center gap-1">
+                    View Details
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                  </a>
+                  </span>
                 </div>
               </motion.div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Project Detail Modal */}
+      {selectedProject && (
+        <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+      )}
     </section>
   );
 };
