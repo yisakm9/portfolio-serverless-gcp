@@ -18,7 +18,7 @@ const featuredProjects = [
     ],
     tech: ['Cloud Run', 'Cloud SQL', 'VPC', 'Cloud NAT', 'Global LB', 'Terraform', 'Docker', 'FastAPI', 'pytest'],
     platform: 'GCP',
-    github: 'https://github.com/yisakm9/CloudPulse-UptimeMonitor',
+    github: 'https://github.com/yisakm9/CloudPulse-Uptime-Monitor',
     color: 'from-cyan-400 to-blue-500',
   },
   {
@@ -33,7 +33,7 @@ const featuredProjects = [
     ],
     tech: ['Lambda', 'API Gateway', 'CloudFront', 'S3', 'CloudWatch', 'SNS', 'SES', 'KMS', 'Terraform'],
     platform: 'AWS',
-    github: 'https://github.com/yisakm9/Project-12-Cloud-CostCalculator',
+    github: 'https://github.com/yisakm9/Project-12-Cloud-Cost-Calculator',
     color: 'from-orange-400 to-amber-500',
   },
   {
