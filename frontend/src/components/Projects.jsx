@@ -53,10 +53,10 @@ const Projects = () => {
           className="text-center"
         >
           <h2 className="section-title">
-            Featured <span className="gradient-text">Projects</span>
+            More on <span className="gradient-text">GitHub</span>
           </h2>
           <p className="section-subtitle">
-            Production-grade cloud infrastructure projects — fetched live from GitHub
+            All repositories — fetched live from the GitHub API
           </p>
         </motion.div>
 

@@ -3,6 +3,7 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Skills from './components/Skills';
 import Testimonials from './components/Testimonials';
+import FeaturedProjects from './components/FeaturedProjects';
 import Projects from './components/Projects';
 import Blog from './components/Blog';
 import ContactForm from './components/ContactForm';
@@ -26,6 +27,10 @@ function App() {
       <div className="gradient-line" />
 
       <Testimonials />
+
+      <div className="gradient-line" />
+
+      <FeaturedProjects />
 
       <div className="gradient-line" />
 
