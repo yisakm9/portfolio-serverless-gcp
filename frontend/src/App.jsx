@@ -2,6 +2,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
 import Skills from './components/Skills';
+import Testimonials from './components/Testimonials';
 import Projects from './components/Projects';
 import ContactForm from './components/ContactForm';
 
@@ -20,6 +21,10 @@ function App() {
       <div className="gradient-line" />
 
       <Skills />
+
+      <div className="gradient-line" />
+
+      <Testimonials />
 
       <div className="gradient-line" />
 
