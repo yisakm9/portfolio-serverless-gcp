@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const roles = [
+  'Web Designer',
   'Cloud Engineer',
+  'UI/UX Enthusiast',
   'DevOps Specialist',
-  'Infrastructure Architect',
-  'Automation Engineer',
 ];
 
 const Hero = () => {
@@ -76,11 +76,10 @@ const Hero = () => {
 
           {/* Description */}
           <p className="text-gray-400 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-            Building <span className="text-white font-medium">serverless</span>,{' '}
+            Crafting <span className="text-white font-medium">beautiful</span> user interfaces and building <span className="text-white font-medium">serverless</span>,{' '}
             <span className="text-white font-medium">scalable</span> infrastructure on{' '}
             <span className="text-accent-cyan">GCP</span> &{' '}
-            <span className="text-accent-violet">AWS</span> with{' '}
-            Terraform, Docker, and CI/CD pipelines.
+            <span className="text-accent-violet">AWS</span>.
           </p>
 
           {/* CTAs */}

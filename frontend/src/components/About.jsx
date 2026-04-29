@@ -22,7 +22,7 @@ const About = () => {
             About <span className="gradient-text">Me</span>
           </h2>
           <p className="section-subtitle">
-            Passionate about automating everything and building resilient cloud infrastructure
+            Passionate about crafting intuitive user interfaces and building resilient cloud infrastructure
           </p>
         </motion.div>
 
@@ -36,8 +36,8 @@ const About = () => {
           >
             <div className="glass p-8">
               <p className="text-gray-300 leading-relaxed mb-4">
-                I'm a <span className="text-white font-semibold">Cloud Engineer</span> specializing in
-                designing and implementing <span className="text-accent-cyan">serverless architectures</span> and{' '}
+                I'm a <span className="text-white font-semibold">Web Designer & Cloud Engineer</span> specializing in
+                creating <span className="text-accent-cyan">beautiful user experiences</span> and implementing{' '}
                 <span className="text-accent-violet">automated infrastructure</span> on Google Cloud Platform and AWS.
               </p>
               <p className="text-gray-300 leading-relaxed mb-4">
@@ -46,9 +46,9 @@ const About = () => {
                 No manual clicks, no snowflake servers.
               </p>
               <p className="text-gray-300 leading-relaxed">
-                Currently building production-grade serverless systems with{' '}
-                <span className="text-accent-cyan">Terraform</span>,{' '}
-                <span className="text-accent-violet">Cloud Functions</span>,{' '}
+                Currently building modern web applications and production-grade serverless systems with{' '}
+                <span className="text-accent-cyan">React & Tailwind</span>,{' '}
+                <span className="text-accent-violet">Terraform</span>,{' '}
                 <span className="text-accent-blue">Docker</span>, and{' '}
                 <span className="text-emerald-400">GitHub Actions</span>.
               </p>
