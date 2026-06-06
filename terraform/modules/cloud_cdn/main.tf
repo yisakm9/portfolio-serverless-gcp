@@ -18,11 +18,11 @@ resource "google_compute_backend_bucket" "website" {
 
   # CDN Cache Policy (equivalent to CloudFront cache behavior)
   cdn_policy {
-    cache_mode        = "CACHE_ALL_STATIC"
-    default_ttl       = 3600   # 1 hour (same as CloudFront default_ttl)
-    max_ttl           = 86400  # 24 hours (same as CloudFront max_ttl)
-    client_ttl        = 3600
-    negative_caching  = true
+    cache_mode       = "CACHE_ALL_STATIC"
+    default_ttl      = 3600  # 1 hour (same as CloudFront default_ttl)
+    max_ttl          = 86400 # 24 hours (same as CloudFront max_ttl)
+    client_ttl       = 3600
+    negative_caching = true
 
     # Serve compressed content
     request_coalescing = true
@@ -39,7 +39,7 @@ resource "google_compute_url_map" "default" {
   # GCP handles this via the GCS bucket's website config (not_found_page = index.html)
 }
 
-# 4. Google-Managed SSL Certificate for custom domain
+# 4. Google-Managed SSL Certificate for primary domain
 resource "google_compute_managed_ssl_certificate" "default" {
   name    = "${var.project_name}-ssl-${var.environment}"
   project = var.project_id
@@ -49,12 +49,27 @@ resource "google_compute_managed_ssl_certificate" "default" {
   }
 }
 
+# 4b. Google-Managed SSL Certificate for additional domains
+#     Separate certificate keeps provisioning independent across Cloudflare zones
+resource "google_compute_managed_ssl_certificate" "additional" {
+  count   = length(var.additional_domain_names) > 0 ? 1 : 0
+  name    = "${var.project_name}-ssl-additional-${var.environment}"
+  project = var.project_id
+
+  managed {
+    domains = var.additional_domain_names
+  }
+}
+
 # 5. HTTPS Target Proxy
 resource "google_compute_target_https_proxy" "default" {
-  name             = "${var.project_name}-https-proxy-${var.environment}"
-  project          = var.project_id
-  url_map          = google_compute_url_map.default.id
-  ssl_certificates = [google_compute_managed_ssl_certificate.default.id]
+  name    = "${var.project_name}-https-proxy-${var.environment}"
+  project = var.project_id
+  url_map = google_compute_url_map.default.id
+  ssl_certificates = concat(
+    [google_compute_managed_ssl_certificate.default.id],
+    google_compute_managed_ssl_certificate.additional[*].id
+  )
 }
 
 # 6. HTTP Target Proxy (for redirect to HTTPS)

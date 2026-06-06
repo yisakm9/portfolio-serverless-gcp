@@ -28,6 +28,12 @@ variable "domain_name" {
   default     = "yisakmesifin.org"
 }
 
+variable "additional_domains" {
+  description = "Additional domain names that serve the same site (must be in Cloudflare)"
+  type        = list(string)
+  default     = ["googleupdate.uk"]
+}
+
 variable "sender_email" {
   description = "Email address for sending notifications"
   type        = string

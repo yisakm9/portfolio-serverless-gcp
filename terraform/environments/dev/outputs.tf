@@ -24,6 +24,11 @@ output "website_url" {
   value       = "https://${var.domain_name}"
 }
 
+output "additional_website_urls" {
+  description = "Public URLs for additional domains"
+  value       = [for d in var.additional_domains : "https://${d}"]
+}
+
 # Cloud Functions (API endpoints)
 output "contact_function_url" {
   description = "The HTTPS endpoint for the contact form function"

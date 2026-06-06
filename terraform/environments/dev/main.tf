@@ -35,8 +35,13 @@ module "cloud_cdn" {
   environment     = var.environment
   gcs_bucket_name = module.frontend_bucket.bucket_name
 
-  # Custom domain for SSL certificate
+  # Primary domain SSL certificate
   domain_names = [var.domain_name, "www.${var.domain_name}"]
+
+  # Additional domains get a separate SSL certificate
+  additional_domain_names = flatten([
+    for d in var.additional_domains : [d, "www.${d}"]
+  ])
 }
 
 # =============================================================================
@@ -164,5 +169,17 @@ module "cloudflare_dns" {
   source = "../../modules/cloudflare"
 
   domain_name      = var.domain_name
+  load_balancer_ip = module.cloud_cdn.load_balancer_ip
+}
+
+# =============================================================================
+# 10. CLOUDFLARE DNS — Additional Domains
+# Each additional domain gets its own DNS records pointing to the same LB IP
+# =============================================================================
+module "cloudflare_dns_additional" {
+  source   = "../../modules/cloudflare"
+  for_each = toset(var.additional_domains)
+
+  domain_name      = each.value
   load_balancer_ip = module.cloud_cdn.load_balancer_ip
 }

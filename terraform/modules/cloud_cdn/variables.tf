@@ -19,7 +19,13 @@ variable "gcs_bucket_name" {
 }
 
 variable "domain_names" {
-  description = "List of domain names for the SSL certificate"
+  description = "List of domain names for the primary SSL certificate"
+  type        = list(string)
+  default     = []
+}
+
+variable "additional_domain_names" {
+  description = "List of additional domain names for a separate SSL certificate"
   type        = list(string)
   default     = []
 }

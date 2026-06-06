@@ -14,6 +14,11 @@ output "url_map_name" {
 }
 
 output "ssl_certificate_id" {
-  description = "The SSL certificate ID"
+  description = "The primary SSL certificate ID"
   value       = google_compute_managed_ssl_certificate.default.id
+}
+
+output "additional_ssl_certificate_id" {
+  description = "The additional SSL certificate ID (empty if no additional domains)"
+  value       = length(google_compute_managed_ssl_certificate.additional) > 0 ? google_compute_managed_ssl_certificate.additional[0].id : null
 }
